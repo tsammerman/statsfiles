@@ -1,0 +1,107 @@
+---
+title: "MAT442 - Project01"
+author: "Titus S Ammerman"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document:
+    df_print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+```
+
+> For centuries, people looked at the full moon with some trepidation. From
+stories of werewolves coming out, to more crime sprees, the full moon has
+gotten the blame. Some researchers (I will send you the article later this
+week) in the early 1970s set out to actually study whether there is a “fullmoon”
+effect on the mental health of people. The researchers collected
+admissions data for the emergency room at a mental health hospital for 12
+months. They separated data into rates before the full moon (mean number
+of patients seen 4 to 13 days before the full moon), during the full moon
+(the number of patients seen on the full moon day), and after the full moon
+(mean number of patients seen 4 to 13 days after the full moon). They also
+kept track of which month the data came from since there was likely to be
+a relationship between admissions and the season of the year. The data can
+be found on D2L in the file MentalHealth.csv (also attached in the D2L
+Submission folder). Analyze the data to answer the researchers’ question.
+
+# Abstract
+
+## Purpose
+
+## Background
+
+ - Sample:
+ - Population of interest:
+ - Relevant variables: var1(category), var2(category)
+ 
+# Exploratory Data Analysis
+
+```{r}
+# load dataset...
+
+MentalHealth <- read_csv("MentalHealth.csv", show_col_types = FALSE)
+
+# defining the month order
+month_order <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+# defining the lunar order
+moon_order <- c("Before", "During", "After")
+
+# converting month and moon columns to factors with specified levels
+MentalHealth <- MentalHealth %>%
+  mutate(Moon = factor(Moon, levels = moon_order),
+         Month = factor(Month, levels = month_order))
+
+# summary statistics for overall sample
+
+MentalHealth
+
+```
+
+Now we will break this sample down according to `groups`, starting with...
+
+```{r}
+# grouping by lunar phase
+ggplot(MentalHealth, aes(x = Moon, y = Admission, fill = Moon)) +
+  geom_boxplot() +
+  theme_minimal()
+
+# grouping by month
+ggplot(MentalHealth, aes(x = Month, y = Admission, fill = Month)) +
+  geom_boxplot() +
+  theme_minimal()
+```
+
+We will crease a `season` variable to observe trends that may be less apparent when viewing
+admissions on a monthly basis:
+
+```{r}
+MentalHealth <- MentalHealth %>%
+  mutate(Season = case_when(
+    Month %in% c("Dec", "Jan", "Feb") ~ "Winter",
+    Month %in% c("Mar", "Apr", "May") ~ "Spring",
+    Month %in% c("Jun", "Jul", "Aug") ~ "Summer",
+    Month %in% c("Sep", "Oct", "Nov") ~ "Fall"))
+
+# grouping by season
+ggplot(MentalHealth, aes(x = Season, y = Admission, fill = Season)) +
+  geom_boxplot() +
+  theme_minimal()
+```
+```{r}
+# Sum admissions by Month and Moon Phase
+contingency_table1 <- xtabs(Admission ~ Month + Moon, data = MentalHealth)
+contingency_table2 <- xtabs(Admission ~ Season + Moon, data = MentalHealth)
+
+# Print the contingency table
+print(contingency_table1)
+print(contingency_table2)
+
+```
+# Model Selection
+
+# Conclusion
