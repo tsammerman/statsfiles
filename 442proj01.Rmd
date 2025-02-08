@@ -9,9 +9,11 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+# don't forget to name and number tables
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 ```
+
 
 > For centuries, people looked at the full moon with some trepidation. From
 stories of werewolves coming out, to more crime sprees, the full moon has
@@ -104,4 +106,8 @@ print(contingency_table2)
 ```
 # Model Selection
 
+## Model Assumptions
+
 # Conclusion
+
+## Limitations
