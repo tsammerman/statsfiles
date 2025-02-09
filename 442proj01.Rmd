@@ -96,17 +96,53 @@ ggplot(MentalHealth, aes(x = Season, y = Admission, fill = Season)) +
 ```
 ```{r}
 # Sum admissions by Month and Moon Phase
-contingency_table1 <- xtabs(Admission ~ Month + Moon, data = MentalHealth)
+#contingency_table1 <- xtabs(Admission ~ Month + Moon, data = MentalHealth)
 contingency_table2 <- xtabs(Admission ~ Season + Moon, data = MentalHealth)
 
 # Print the contingency table
-print(contingency_table1)
+#print(contingency_table1)
 print(contingency_table2)
 
 ```
+## Testing the Normality of the Distributions
+
+We will start by observing the distribution of the seasons:
+```{r}
+# Load necessary library
+#library(ggplot2)
+
+# check number of observations per season
+MentalHealth %>% group_by(Season) %>% summarize("Observation Count" = n())
+
+# Create histograms for each season
+ggplot(MentalHealth, aes(x = Admission, fill = Season)) +
+  geom_histogram(binwidth = 1, alpha = 0.7) +
+  facet_wrap(~ Season) +
+  labs(title = "Distribution of Admissions by Season",
+       x = "Number of Admissions",
+       y = "Frequency") +
+  theme_minimal()
+
+```
+
 # Model Selection
 
+A chi-squared test would work if the data were normally distributed.
+A two-sample t-test allows for less stringent assumptions of normality.
+A Kruskal-Wallis test...
+
+on the contingency table to determine whether a relationship
+exists between `moon` and `season`
+```{r}
+# Perform a chi-squared test on the contingency table
+chi_test_result <- chisq.test(contingency_table2)
+
+# Print the results
+print(chi_test_result)
+```
+
 ## Model Assumptions
+
 
 # Conclusion
 
