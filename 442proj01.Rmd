@@ -3,15 +3,17 @@ title: "MAT442 - Project01"
 author: "Titus S Ammerman"
 date: "`r Sys.Date()`"
 output:
-  html_document: default
   pdf_document:
     df_print: kable
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 # don't forget to name and number tables
-knitr::opts_chunk$set(echo = FALSE)
+# MAYBE LIMIT THE size of figures here.
+knitr::opts_chunk$set(echo = FALSE, fig.width=10,fig.height=11)
 library(tidyverse)
+library(car)
 ```
 
 
@@ -33,6 +35,12 @@ Submission folder). Analyze the data to answer the researchers’ question.
 # Abstract
 
 ## Purpose
+
+Questions to be addressed?
+
+- Are hospital admissions associated with lunar phase?
+- Are hospital admissions independent to lunar phase given seasonal differences?
+  - Does the relationship between lunar phase and hospital admissions depend on the season?
 
 ## Background
 
@@ -60,6 +68,7 @@ MentalHealth <- MentalHealth %>%
 
 # summary statistics for overall sample
 
+# ONLY DISPLAY THE FIRST FEW ROWS
 MentalHealth
 
 ```
@@ -112,7 +121,7 @@ We will start by observing the distribution of the seasons:
 #library(ggplot2)
 
 # check number of observations per season
-MentalHealth %>% group_by(Season) %>% summarize("Observation Count" = n())
+MentalHealth %>% group_by(Season) %>%  summarize("Observation Count" = n())
 
 # Create histograms for each season
 ggplot(MentalHealth, aes(x = Admission, fill = Season)) +
@@ -131,14 +140,41 @@ A chi-squared test would work if the data were normally distributed.
 A two-sample t-test allows for less stringent assumptions of normality.
 A Kruskal-Wallis test...
 
-on the contingency table to determine whether a relationship
-exists between `moon` and `season`
 ```{r}
-# Perform a chi-squared test on the contingency table
-chi_test_result <- chisq.test(contingency_table2)
+anova_model <- aov(Admission ~ Moon * Season, data = MentalHealth)
+summary(anova_model)
+anova_model2 <- aov(Admission ~ Moon + Season, data = MentalHealth)
+summary(anova_model2)
+```
+According to the ANOVA table, the Season seems to have the greatest effect on admissions.
 
-# Print the results
-print(chi_test_result)
+```{r}
+# checking normality of residuals in anova
+shapiro.test(residuals(anova_model))  # Shapiro-Wilk test
+
+# checking homogeneity of variance
+leveneTest(Admission ~ Moon * Season, data = MentalHealth)
+```
+The assumption of the normality of the residuals is met through the Shapiro-Wilk test.
+The homogeneity assumption of the variance is met through the Levene test.
+```{r}
+
+TukeyHSD(anova_model)
+
+
+```
+
+Notable results:
+ -Spring-Fall ($p = 0.0065914$)
+ -Winter-Spring ($p = 0.0273852$)
+
+
+
+
+```{r}
+t.test(Admission ~ Moon, data = subset(MentalHealth, Moon %in% c("Before", "During")), var.equal = TRUE)
+t.test(Admission ~ Season, data = subset(MentalHealth, Season %in% c("Fall", "Spring")), var.equal = TRUE)
+
 ```
 
 ## Model Assumptions
@@ -146,4 +182,8 @@ print(chi_test_result)
 
 # Conclusion
 
+We found that `season` was the most significant predictor of hospital admissions, with lunar phase failing to meet our significance threshold. More specifically, there seems to be a significant increase in admissions between the Fall and Spring months.
+
 ## Limitations
+
+The study is limited by the relatively low sample size when considering the segmentation of the data that took place when placing it into a contingency table. A future study may aggregate data from multiple hospital locations, perhaps with varying climates, to see if the association with season and Admissions is spurious and simply a consequence of temperatures restraining activities and thus the potential for injury.

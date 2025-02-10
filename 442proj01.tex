@@ -1,0 +1,417 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={MAT442 - Project01},
+  pdfauthor={Titus S Ammerman},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{MAT442 - Project01}
+\author{Titus S Ammerman}
+\date{2025-02-09}
+
+\begin{document}
+\maketitle
+
+\begin{quote}
+For centuries, people looked at the full moon with some trepidation.
+From stories of werewolves coming out, to more crime sprees, the full
+moon has gotten the blame. Some researchers (I will send you the article
+later this week) in the early 1970s set out to actually study whether
+there is a ``fullmoon'' effect on the mental health of people. The
+researchers collected admissions data for the emergency room at a mental
+health hospital for 12 months. They separated data into rates before the
+full moon (mean number of patients seen 4 to 13 days before the full
+moon), during the full moon (the number of patients seen on the full
+moon day), and after the full moon (mean number of patients seen 4 to 13
+days after the full moon). They also kept track of which month the data
+came from since there was likely to be a relationship between admissions
+and the season of the year. The data can be found on D2L in the file
+MentalHealth.csv (also attached in the D2L Submission folder). Analyze
+the data to answer the researchers' question.
+\end{quote}
+
+\section{Abstract}\label{abstract}
+
+\subsection{Purpose}\label{purpose}
+
+Questions to be addressed?
+
+\begin{itemize}
+\tightlist
+\item
+  Are hospital admissions associated with lunar phase?
+\item
+  Are hospital admissions independent to lunar phase given seasonal
+  differences?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Does the relationship between lunar phase and hospital admissions
+    depend on the season?
+  \end{itemize}
+\end{itemize}
+
+\subsection{Background}\label{background}
+
+\begin{itemize}
+\tightlist
+\item
+  Sample:
+\item
+  Population of interest:
+\item
+  Relevant variables: var1(category), var2(category)
+\end{itemize}
+
+\section{Exploratory Data Analysis}\label{exploratory-data-analysis}
+
+\begin{longtable}[]{@{}llr@{}}
+\toprule\noalign{}
+Month & Moon & Admission \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Aug & Before & 6.4 \\
+Sep & Before & 7.1 \\
+Oct & Before & 6.5 \\
+Nov & Before & 8.6 \\
+Dec & Before & 8.1 \\
+Jan & Before & 10.4 \\
+Feb & Before & 11.5 \\
+Mar & Before & 13.8 \\
+Apr & Before & 15.4 \\
+May & Before & 15.7 \\
+Jun & Before & 11.7 \\
+Jul & Before & 15.8 \\
+Aug & During & 5.0 \\
+Sep & During & 13.0 \\
+Oct & During & 14.0 \\
+Nov & During & 12.0 \\
+Dec & During & 6.0 \\
+Jan & During & 9.0 \\
+Feb & During & 13.0 \\
+Mar & During & 16.0 \\
+Apr & During & 25.0 \\
+May & During & 14.0 \\
+Jun & During & 14.0 \\
+Jul & During & 20.0 \\
+Aug & After & 5.8 \\
+Sep & After & 9.2 \\
+Oct & After & 7.9 \\
+Nov & After & 7.7 \\
+Dec & After & 11.0 \\
+Jan & After & 12.9 \\
+Feb & After & 13.5 \\
+Mar & After & 13.1 \\
+Apr & After & 15.8 \\
+May & After & 13.3 \\
+Jun & After & 12.8 \\
+Jul & After & 14.5 \\
+\end{longtable}
+
+Now we will break this sample down according to \texttt{groups},
+starting with\ldots{}
+
+\includegraphics{442proj01_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{442proj01_files/figure-latex/unnamed-chunk-2-2.pdf}
+
+We will crease a \texttt{season} variable to observe trends that may be
+less apparent when viewing admissions on a monthly basis:
+
+\includegraphics{442proj01_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{verbatim}
+##         Moon
+## Season   Before During After
+##   Fall     22.2   39.0  24.8
+##   Spring   44.9   55.0  42.2
+##   Summer   33.9   39.0  33.1
+##   Winter   30.0   28.0  37.4
+\end{verbatim}
+
+\subsection{Testing the Normality of the
+Distributions}\label{testing-the-normality-of-the-distributions}
+
+We will start by observing the distribution of the seasons:
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule\noalign{}
+Season & Observation Count \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Fall & 9 \\
+Spring & 9 \\
+Summer & 9 \\
+Winter & 9 \\
+\end{longtable}
+
+\includegraphics{442proj01_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\section{Model Selection}\label{model-selection}
+
+A chi-squared test would work if the data were normally distributed. A
+two-sample t-test allows for less stringent assumptions of normality. A
+Kruskal-Wallis test\ldots{}
+
+\begin{verbatim}
+##             Df Sum Sq Mean Sq F value  Pr(>F)   
+## Moon         2  41.51   20.76   1.577 0.22735   
+## Season       3 200.89   66.96   5.086 0.00724 **
+## Moon:Season  6  66.53   11.09   0.842 0.55002   
+## Residuals   24 315.99   13.17                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{verbatim}
+##             Df Sum Sq Mean Sq F value  Pr(>F)   
+## Moon         2   41.5   20.76   1.628 0.21320   
+## Season       3  200.9   66.96   5.252 0.00494 **
+## Residuals   30  382.5   12.75                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+According to the ANOVA table, the Season seems to have the greatest
+effect on admissions.
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals(anova_model)
+## W = 0.95438, p-value = 0.1436
+\end{verbatim}
+
+\begin{longtable}[]{@{}lrrr@{}}
+\toprule\noalign{}
+& Df & F value & Pr(\textgreater F) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+group & 11 & 1.07637 & 0.4185177 \\
+& 24 & NA & NA \\
+\end{longtable}
+
+The assumption of the normality of the residuals is met through the
+Shapiro-Wilk test. The homogeneity assumption of the variance is met
+through the Levene test.
+
+\begin{verbatim}
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = Admission ~ Moon * Season, data = MentalHealth)
+## 
+## $Moon
+##                     diff       lwr      upr     p adj
+## During-Before  2.5000000 -1.199318 6.199318 0.2303834
+## After-Before   0.5416667 -3.157651 4.240984 0.9291646
+## After-During  -1.9583333 -5.657651 1.740984 0.3970873
+## 
+## $Season
+##                    diff       lwr        upr     p adj
+## Spring-Fall    6.233333  1.514739 10.9519274 0.0065914
+## Summer-Fall    2.222222 -2.496372  6.9408163 0.5723088
+## Winter-Fall    1.044444 -3.674150  5.7630385 0.9277072
+## Summer-Spring -4.011111 -8.729705  0.7074829 0.1157989
+## Winter-Spring -5.188889 -9.907483 -0.4702948 0.0273852
+## Winter-Summer -1.177778 -5.896372  3.5408163 0.9004473
+## 
+## $`Moon:Season`
+##                                      diff         lwr       upr     p adj
+## During:Fall-Before:Fall      5.600000e+00  -5.0822859 16.282286 0.7540075
+## After:Fall-Before:Fall       8.666667e-01  -9.8156192 11.548953 1.0000000
+## Before:Spring-Before:Fall    7.566667e+00  -3.1156192 18.248953 0.3558309
+## During:Spring-Before:Fall    1.093333e+01   0.2510474 21.615619 0.0416026
+## After:Spring-Before:Fall     6.666667e+00  -4.0156192 17.348953 0.5329890
+## Before:Summer-Before:Fall    3.900000e+00  -6.7822859 14.582286 0.9685406
+## During:Summer-Before:Fall    5.600000e+00  -5.0822859 16.282286 0.7540075
+## After:Summer-Before:Fall     3.633333e+00  -7.0489526 14.315619 0.9810148
+## Before:Winter-Before:Fall    2.600000e+00  -8.0822859 13.282286 0.9987694
+## During:Winter-Before:Fall    1.933333e+00  -8.7489526 12.615619 0.9999233
+## After:Winter-Before:Fall     5.066667e+00  -5.6156192 15.748953 0.8468816
+## After:Fall-During:Fall      -4.733333e+00 -15.4156192  5.948953 0.8937456
+## Before:Spring-During:Fall    1.966667e+00  -8.7156192 12.648953 0.9999094
+## During:Spring-During:Fall    5.333333e+00  -5.3489526 16.015619 0.8028935
+## After:Spring-During:Fall     1.066667e+00  -9.6156192 11.748953 0.9999998
+## Before:Summer-During:Fall   -1.700000e+00 -12.3822859  8.982286 0.9999786
+## During:Summer-During:Fall   -1.776357e-15 -10.6822859 10.682286 1.0000000
+## After:Summer-During:Fall    -1.966667e+00 -12.6489526  8.715619 0.9999094
+## Before:Winter-During:Fall   -3.000000e+00 -13.6822859  7.682286 0.9957760
+## During:Winter-During:Fall   -3.666667e+00 -14.3489526  7.015619 0.9797038
+## After:Winter-During:Fall    -5.333333e-01 -11.2156192 10.148953 1.0000000
+## Before:Spring-After:Fall     6.700000e+00  -3.9822859 17.382286 0.5259799
+## During:Spring-After:Fall     1.006667e+01  -0.6156192 20.748953 0.0775290
+## After:Spring-After:Fall      5.800000e+00  -4.8822859 16.482286 0.7147766
+## Before:Summer-After:Fall     3.033333e+00  -7.6489526 13.715619 0.9953708
+## During:Summer-After:Fall     4.733333e+00  -5.9489526 15.415619 0.8937456
+## After:Summer-After:Fall      2.766667e+00  -7.9156192 13.448953 0.9978762
+## Before:Winter-After:Fall     1.733333e+00  -8.9489526 12.415619 0.9999740
+## During:Winter-After:Fall     1.066667e+00  -9.6156192 11.748953 0.9999998
+## After:Winter-After:Fall      4.200000e+00  -6.4822859 14.882286 0.9483725
+## During:Spring-Before:Spring  3.366667e+00  -7.3156192 14.048953 0.9893223
+## After:Spring-Before:Spring  -9.000000e-01 -11.5822859  9.782286 1.0000000
+## Before:Summer-Before:Spring -3.666667e+00 -14.3489526  7.015619 0.9797038
+## During:Summer-Before:Spring -1.966667e+00 -12.6489526  8.715619 0.9999094
+## After:Summer-Before:Spring  -3.933333e+00 -14.6156192  6.748953 0.9666403
+## Before:Winter-Before:Spring -4.966667e+00 -15.6489526  5.715619 0.8619348
+## During:Winter-Before:Spring -5.633333e+00 -16.3156192  5.048953 0.7476045
+## After:Winter-Before:Spring  -2.500000e+00 -13.1822859  8.182286 0.9991344
+## After:Spring-During:Spring  -4.266667e+00 -14.9489526  6.415619 0.9429040
+## Before:Summer-During:Spring -7.033333e+00 -17.7156192  3.648953 0.4573060
+## During:Summer-During:Spring -5.333333e+00 -16.0156192  5.348953 0.8028935
+## After:Summer-During:Spring  -7.300000e+00 -17.9822859  3.382286 0.4050090
+## Before:Winter-During:Spring -8.333333e+00 -19.0156192  2.348953 0.2354753
+## During:Winter-During:Spring -9.000000e+00 -19.6822859  1.682286 0.1575570
+## After:Winter-During:Spring  -5.866667e+00 -16.5489526  4.815619 0.7013119
+## Before:Summer-After:Spring  -2.766667e+00 -13.4489526  7.915619 0.9978762
+## During:Summer-After:Spring  -1.066667e+00 -11.7489526  9.615619 0.9999998
+## After:Summer-After:Spring   -3.033333e+00 -13.7156192  7.648953 0.9953708
+## Before:Winter-After:Spring  -4.066667e+00 -14.7489526  6.615619 0.9582071
+## During:Winter-After:Spring  -4.733333e+00 -15.4156192  5.948953 0.8937456
+## After:Winter-After:Spring   -1.600000e+00 -12.2822859  9.082286 0.9999884
+## During:Summer-Before:Summer  1.700000e+00  -8.9822859 12.382286 0.9999786
+## After:Summer-Before:Summer  -2.666667e-01 -10.9489526 10.415619 1.0000000
+## Before:Winter-Before:Summer -1.300000e+00 -11.9822859  9.382286 0.9999986
+## During:Winter-Before:Summer -1.966667e+00 -12.6489526  8.715619 0.9999094
+## After:Winter-Before:Summer   1.166667e+00  -9.5156192 11.848953 0.9999996
+## After:Summer-During:Summer  -1.966667e+00 -12.6489526  8.715619 0.9999094
+## Before:Winter-During:Summer -3.000000e+00 -13.6822859  7.682286 0.9957760
+## During:Winter-During:Summer -3.666667e+00 -14.3489526  7.015619 0.9797038
+## After:Winter-During:Summer  -5.333333e-01 -11.2156192 10.148953 1.0000000
+## Before:Winter-After:Summer  -1.033333e+00 -11.7156192  9.648953 0.9999999
+## During:Winter-After:Summer  -1.700000e+00 -12.3822859  8.982286 0.9999786
+## After:Winter-After:Summer    1.433333e+00  -9.2489526 12.115619 0.9999962
+## During:Winter-Before:Winter -6.666667e-01 -11.3489526 10.015619 1.0000000
+## After:Winter-Before:Winter   2.466667e+00  -8.2156192 13.148953 0.9992335
+## After:Winter-During:Winter   3.133333e+00  -7.5489526 13.815619 0.9939621
+\end{verbatim}
+
+Notable results: -Spring-Fall (\(p = 0.0065914\)) -Winter-Spring
+(\(p = 0.0273852\))
+
+\begin{verbatim}
+## 
+##  Two Sample t-test
+## 
+## data:  Admission by Moon
+## t = -1.3151, df = 22, p-value = 0.202
+## alternative hypothesis: true difference in means between group Before and group During is not equal to 0
+## 95 percent confidence interval:
+##  -6.442563  1.442563
+## sample estimates:
+## mean in group Before mean in group During 
+##             10.91667             13.41667
+\end{verbatim}
+
+\begin{verbatim}
+## 
+##  Two Sample t-test
+## 
+## data:  Admission by Season
+## t = -4.1075, df = 16, p-value = 0.0008235
+## alternative hypothesis: true difference in means between group Fall and group Spring is not equal to 0
+## 95 percent confidence interval:
+##  -9.450378 -3.016289
+## sample estimates:
+##   mean in group Fall mean in group Spring 
+##             9.555556            15.788889
+\end{verbatim}
+
+\subsection{Model Assumptions}\label{model-assumptions}
+
+\section{Conclusion}\label{conclusion}
+
+We found that \texttt{season} was the most significant predictor of
+hospital admissions, with lunar phase failing to meet our significance
+threshold. More specifically, there seems to be a significant increase
+in admissions between the Fall and Spring months.
+
+\subsection{Limitations}\label{limitations}
+
+The study is limited by the relatively low sample size when considering
+the segmentation of the data that took place when placing it into a
+contingency table. A future study may aggregate data from multiple
+hospital locations, perhaps with varying climates, to see if the
+association with season and Admissions is spurious and simply a
+consequence of temperatures restraining activities and thus the
+potential for injury.
+
+\end{document}

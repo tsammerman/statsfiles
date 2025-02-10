@@ -11,7 +11,7 @@
 
 <meta name="author" content="Titus S Ammerman" />
 
-<meta name="date" content="2025-02-08" />
+<meta name="date" content="2025-02-09" />
 
 <title>MAT442 - Project01</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">MAT442 - Project01</h1>
 <h4 class="author">Titus S Ammerman</h4>
-<h4 class="date">2025-02-08</h4>
+<h4 class="date">2025-02-09</h4>
 
 </div>
 
@@ -378,6 +378,16 @@ the data to answer the researchers’ question.</p>
 <h1>Abstract</h1>
 <div id="purpose" class="section level2">
 <h2>Purpose</h2>
+<p>Questions to be addressed?</p>
+<ul>
+<li>Are hospital admissions associated with lunar phase?</li>
+<li>Are hospital admissions independent to lunar phase given seasonal
+differences?
+<ul>
+<li>Does the relationship between lunar phase and hospital admissions
+depend on the season?</li>
+</ul></li>
+</ul>
 </div>
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -434,21 +444,166 @@ may be less apparent when viewing admissions on a monthly basis:</p>
 <p>A chi-squared test would work if the data were normally distributed.
 A two-sample t-test allows for less stringent assumptions of normality.
 A Kruskal-Wallis test…</p>
-<p>on the contingency table to determine whether a relationship exists
-between <code>moon</code> and <code>season</code></p>
+<pre><code>##             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## Moon         2  41.51   20.76   1.577 0.22735   
+## Season       3 200.89   66.96   5.086 0.00724 **
+## Moon:Season  6  66.53   11.09   0.842 0.55002   
+## Residuals   24 315.99   13.17                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## Moon         2   41.5   20.76   1.628 0.21320   
+## Season       3  200.9   66.96   5.252 0.00494 **
+## Residuals   30  382.5   12.75                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>According to the ANOVA table, the Season seems to have the greatest
+effect on admissions.</p>
 <pre><code>## 
-##  Pearson&#39;s Chi-squared test
+##  Shapiro-Wilk normality test
 ## 
-## data:  contingency_table2
-## X-squared = 6.0226, df = 6, p-value = 0.4207</code></pre>
+## data:  residuals(anova_model)
+## W = 0.95438, p-value = 0.1436</code></pre>
+<pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(&gt;F)
+## group 11  1.0764 0.4185
+##       24</code></pre>
+<p>The assumption of the normality of the residuals is met through the
+Shapiro-Wilk test. The homogeneity assumption of the variance is met
+through the Levene test.</p>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = Admission ~ Moon * Season, data = MentalHealth)
+## 
+## $Moon
+##                     diff       lwr      upr     p adj
+## During-Before  2.5000000 -1.199318 6.199318 0.2303834
+## After-Before   0.5416667 -3.157651 4.240984 0.9291646
+## After-During  -1.9583333 -5.657651 1.740984 0.3970873
+## 
+## $Season
+##                    diff       lwr        upr     p adj
+## Spring-Fall    6.233333  1.514739 10.9519274 0.0065914
+## Summer-Fall    2.222222 -2.496372  6.9408163 0.5723088
+## Winter-Fall    1.044444 -3.674150  5.7630385 0.9277072
+## Summer-Spring -4.011111 -8.729705  0.7074829 0.1157989
+## Winter-Spring -5.188889 -9.907483 -0.4702948 0.0273852
+## Winter-Summer -1.177778 -5.896372  3.5408163 0.9004473
+## 
+## $`Moon:Season`
+##                                      diff         lwr       upr     p adj
+## During:Fall-Before:Fall      5.600000e+00  -5.0822859 16.282286 0.7540075
+## After:Fall-Before:Fall       8.666667e-01  -9.8156192 11.548953 1.0000000
+## Before:Spring-Before:Fall    7.566667e+00  -3.1156192 18.248953 0.3558309
+## During:Spring-Before:Fall    1.093333e+01   0.2510474 21.615619 0.0416026
+## After:Spring-Before:Fall     6.666667e+00  -4.0156192 17.348953 0.5329890
+## Before:Summer-Before:Fall    3.900000e+00  -6.7822859 14.582286 0.9685406
+## During:Summer-Before:Fall    5.600000e+00  -5.0822859 16.282286 0.7540075
+## After:Summer-Before:Fall     3.633333e+00  -7.0489526 14.315619 0.9810148
+## Before:Winter-Before:Fall    2.600000e+00  -8.0822859 13.282286 0.9987694
+## During:Winter-Before:Fall    1.933333e+00  -8.7489526 12.615619 0.9999233
+## After:Winter-Before:Fall     5.066667e+00  -5.6156192 15.748953 0.8468816
+## After:Fall-During:Fall      -4.733333e+00 -15.4156192  5.948953 0.8937456
+## Before:Spring-During:Fall    1.966667e+00  -8.7156192 12.648953 0.9999094
+## During:Spring-During:Fall    5.333333e+00  -5.3489526 16.015619 0.8028935
+## After:Spring-During:Fall     1.066667e+00  -9.6156192 11.748953 0.9999998
+## Before:Summer-During:Fall   -1.700000e+00 -12.3822859  8.982286 0.9999786
+## During:Summer-During:Fall   -1.776357e-15 -10.6822859 10.682286 1.0000000
+## After:Summer-During:Fall    -1.966667e+00 -12.6489526  8.715619 0.9999094
+## Before:Winter-During:Fall   -3.000000e+00 -13.6822859  7.682286 0.9957760
+## During:Winter-During:Fall   -3.666667e+00 -14.3489526  7.015619 0.9797038
+## After:Winter-During:Fall    -5.333333e-01 -11.2156192 10.148953 1.0000000
+## Before:Spring-After:Fall     6.700000e+00  -3.9822859 17.382286 0.5259799
+## During:Spring-After:Fall     1.006667e+01  -0.6156192 20.748953 0.0775290
+## After:Spring-After:Fall      5.800000e+00  -4.8822859 16.482286 0.7147766
+## Before:Summer-After:Fall     3.033333e+00  -7.6489526 13.715619 0.9953708
+## During:Summer-After:Fall     4.733333e+00  -5.9489526 15.415619 0.8937456
+## After:Summer-After:Fall      2.766667e+00  -7.9156192 13.448953 0.9978762
+## Before:Winter-After:Fall     1.733333e+00  -8.9489526 12.415619 0.9999740
+## During:Winter-After:Fall     1.066667e+00  -9.6156192 11.748953 0.9999998
+## After:Winter-After:Fall      4.200000e+00  -6.4822859 14.882286 0.9483725
+## During:Spring-Before:Spring  3.366667e+00  -7.3156192 14.048953 0.9893223
+## After:Spring-Before:Spring  -9.000000e-01 -11.5822859  9.782286 1.0000000
+## Before:Summer-Before:Spring -3.666667e+00 -14.3489526  7.015619 0.9797038
+## During:Summer-Before:Spring -1.966667e+00 -12.6489526  8.715619 0.9999094
+## After:Summer-Before:Spring  -3.933333e+00 -14.6156192  6.748953 0.9666403
+## Before:Winter-Before:Spring -4.966667e+00 -15.6489526  5.715619 0.8619348
+## During:Winter-Before:Spring -5.633333e+00 -16.3156192  5.048953 0.7476045
+## After:Winter-Before:Spring  -2.500000e+00 -13.1822859  8.182286 0.9991344
+## After:Spring-During:Spring  -4.266667e+00 -14.9489526  6.415619 0.9429040
+## Before:Summer-During:Spring -7.033333e+00 -17.7156192  3.648953 0.4573060
+## During:Summer-During:Spring -5.333333e+00 -16.0156192  5.348953 0.8028935
+## After:Summer-During:Spring  -7.300000e+00 -17.9822859  3.382286 0.4050090
+## Before:Winter-During:Spring -8.333333e+00 -19.0156192  2.348953 0.2354753
+## During:Winter-During:Spring -9.000000e+00 -19.6822859  1.682286 0.1575570
+## After:Winter-During:Spring  -5.866667e+00 -16.5489526  4.815619 0.7013119
+## Before:Summer-After:Spring  -2.766667e+00 -13.4489526  7.915619 0.9978762
+## During:Summer-After:Spring  -1.066667e+00 -11.7489526  9.615619 0.9999998
+## After:Summer-After:Spring   -3.033333e+00 -13.7156192  7.648953 0.9953708
+## Before:Winter-After:Spring  -4.066667e+00 -14.7489526  6.615619 0.9582071
+## During:Winter-After:Spring  -4.733333e+00 -15.4156192  5.948953 0.8937456
+## After:Winter-After:Spring   -1.600000e+00 -12.2822859  9.082286 0.9999884
+## During:Summer-Before:Summer  1.700000e+00  -8.9822859 12.382286 0.9999786
+## After:Summer-Before:Summer  -2.666667e-01 -10.9489526 10.415619 1.0000000
+## Before:Winter-Before:Summer -1.300000e+00 -11.9822859  9.382286 0.9999986
+## During:Winter-Before:Summer -1.966667e+00 -12.6489526  8.715619 0.9999094
+## After:Winter-Before:Summer   1.166667e+00  -9.5156192 11.848953 0.9999996
+## After:Summer-During:Summer  -1.966667e+00 -12.6489526  8.715619 0.9999094
+## Before:Winter-During:Summer -3.000000e+00 -13.6822859  7.682286 0.9957760
+## During:Winter-During:Summer -3.666667e+00 -14.3489526  7.015619 0.9797038
+## After:Winter-During:Summer  -5.333333e-01 -11.2156192 10.148953 1.0000000
+## Before:Winter-After:Summer  -1.033333e+00 -11.7156192  9.648953 0.9999999
+## During:Winter-After:Summer  -1.700000e+00 -12.3822859  8.982286 0.9999786
+## After:Winter-After:Summer    1.433333e+00  -9.2489526 12.115619 0.9999962
+## During:Winter-Before:Winter -6.666667e-01 -11.3489526 10.015619 1.0000000
+## After:Winter-Before:Winter   2.466667e+00  -8.2156192 13.148953 0.9992335
+## After:Winter-During:Winter   3.133333e+00  -7.5489526 13.815619 0.9939621</code></pre>
+<p>Notable results: -Spring-Fall (<span class="math inline">\(p =
+0.0065914\)</span>) -Winter-Spring (<span class="math inline">\(p =
+0.0273852\)</span>)</p>
+<pre><code>## 
+##  Two Sample t-test
+## 
+## data:  Admission by Moon
+## t = -1.3151, df = 22, p-value = 0.202
+## alternative hypothesis: true difference in means between group Before and group During is not equal to 0
+## 95 percent confidence interval:
+##  -6.442563  1.442563
+## sample estimates:
+## mean in group Before mean in group During 
+##             10.91667             13.41667</code></pre>
+<pre><code>## 
+##  Two Sample t-test
+## 
+## data:  Admission by Season
+## t = -4.1075, df = 16, p-value = 0.0008235
+## alternative hypothesis: true difference in means between group Fall and group Spring is not equal to 0
+## 95 percent confidence interval:
+##  -9.450378 -3.016289
+## sample estimates:
+##   mean in group Fall mean in group Spring 
+##             9.555556            15.788889</code></pre>
 <div id="model-assumptions" class="section level2">
 <h2>Model Assumptions</h2>
 </div>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
+<p>We found that <code>season</code> was the most significant predictor
+of hospital admissions, with lunar phase failing to meet our
+significance threshold. More specifically, there seems to be a
+significant increase in admissions between the Fall and Spring
+months.</p>
 <div id="limitations" class="section level2">
 <h2>Limitations</h2>
+<p>The study is limited by the relatively low sample size when
+considering the segmentation of the data that took place when placing it
+into a contingency table. A future study may aggregate data from
+multiple hospital locations, perhaps with varying climates, to see if
+the association with season and Admissions is spurious and simply a
+consequence of temperatures restraining activities and thus the
+potential for injury.</p>
 </div>
 </div>
 
