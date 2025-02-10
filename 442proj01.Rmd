@@ -1,7 +1,7 @@
 ---
-title: "MAT442 - Project01"
+title: "The Effect of Lunar Phases on Mental Health Admissions"
 author: "Titus S Ammerman"
-date: "`r Sys.Date()`"
+date: "10 January 2025"
 output:
   pdf_document:
     df_print: kable
@@ -9,44 +9,33 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-# don't forget to name and number tables
-# MAYBE LIMIT THE size of figures here.
-knitr::opts_chunk$set(echo = FALSE, fig.width=10,fig.height=11)
+# limiting figure size and preventing code from appearing outside appendix.
+knitr::opts_chunk$set(echo = FALSE, fig.width=7)
 library(tidyverse)
 library(car)
 ```
 
+# Abstract  
 
-> For centuries, people looked at the full moon with some trepidation. From
-stories of werewolves coming out, to more crime sprees, the full moon has
-gotten the blame. Some researchers (I will send you the article later this
-week) in the early 1970s set out to actually study whether there is a “fullmoon”
-effect on the mental health of people. The researchers collected
-admissions data for the emergency room at a mental health hospital for 12
-months. They separated data into rates before the full moon (mean number
-of patients seen 4 to 13 days before the full moon), during the full moon
-(the number of patients seen on the full moon day), and after the full moon
-(mean number of patients seen 4 to 13 days after the full moon). They also
-kept track of which month the data came from since there was likely to be
-a relationship between admissions and the season of the year. The data can
-be found on D2L in the file MentalHealth.csv (also attached in the D2L
-Submission folder). Analyze the data to answer the researchers’ question.
+For centuries, the full moon has been associated with unusual human behavior, from folklore about werewolves to claims of increased crime rates. This study examines whether the full moon affects mental health by analyzing 12 months of admissions data from a mental health facility. The data is structured to compare admission rates before, during, and after the full moon, while also accounting for seasonal variations.  
 
-# Abstract
+# Purpose  
 
-## Purpose
+This study aims to determine whether hospital admissions for mental health crises are influenced by the lunar cycle. Specifically, we analyze admission rates before, during, and after a full moon to assess potential patterns.  
 
-Questions to be addressed?
+## Questions to be addressed:  
+- Are hospital admissions associated with the lunar phase?  
+- Are hospital admissions independent of the lunar phase when accounting for seasonal differences?  
+- Does the relationship between lunar phase and hospital admissions depend on the season?  
 
-- Are hospital admissions associated with lunar phase?
-- Are hospital admissions independent to lunar phase given seasonal differences?
-  - Does the relationship between lunar phase and hospital admissions depend on the season?
+# Background  
 
-## Background
-
- - Sample:
- - Population of interest:
- - Relevant variables: var1(category), var2(category)
+- **Sample:** 36 observations collected over 12 months, with three lunar-phase periods per month (before, during, and after the full moon).  
+- **Population of Interest:** Patients admitted to the mental health facility.  
+- **Relevant Variables:**  
+  - **Lunar phase** (categorical: before, during, after full moon)  
+  - **Month** (categorical: January, February, ..., December)  
+  - **Hospital admissions** (numerical: number of patients per period)  
  
 # Exploratory Data Analysis
 
@@ -66,29 +55,39 @@ MentalHealth <- MentalHealth %>%
   mutate(Moon = factor(Moon, levels = moon_order),
          Month = factor(Month, levels = month_order))
 
-# summary statistics for overall sample
-
-# ONLY DISPLAY THE FIRST FEW ROWS
-MentalHealth
+# only displaying the first few rows of data...
+head(MentalHealth)
 
 ```
 
-Now we will break this sample down according to `groups`, starting with...
+Now we will break this sample down according to lunar phase(`Moon`)
 
-```{r}
+```{r fig.cap = "Mental Health Admissions by Lunar Phase"}
 # grouping by lunar phase
 ggplot(MentalHealth, aes(x = Moon, y = Admission, fill = Moon)) +
   geom_boxplot() +
   theme_minimal()
+```
 
+There doesn't appear to be very much between-group variance, but within-group variance is prominent among admissions during a full-moon.
+
+
+We will proceed by segmenting the sample by month, and displaying the resulting boxplot (Figure 2).
+
+\newpage
+
+
+```{r fig.cap = "Mental Health Admissions by Month"}
 # grouping by month
 ggplot(MentalHealth, aes(x = Month, y = Admission, fill = Month)) +
   geom_boxplot() +
   theme_minimal()
 ```
 
-We will crease a `season` variable to observe trends that may be less apparent when viewing
-admissions on a monthly basis:
+Within-group variance varies quite significantly, as does between-group variance. This is particularly noticeable between the months of July and August. Additionally, a seasonal pattern appears to emerge when breaking the sample down by `Month`.
+
+
+We will crease a `season` variable to observe the seasonal trend from a more compact timescale than when viewing admissions on a monthly basis. This information can be displayed succinctly within a two-way contingency table.
 
 ```{r}
 MentalHealth <- MentalHealth %>%
@@ -98,25 +97,39 @@ MentalHealth <- MentalHealth %>%
     Month %in% c("Jun", "Jul", "Aug") ~ "Summer",
     Month %in% c("Sep", "Oct", "Nov") ~ "Fall"))
 
+
+# Sum admissions by Month and Moon Phase
+#contingency_table1 <- xtabs(Admission ~ Month + Moon, data = MentalHealth)
+contingency_table <- xtabs(Admission ~ Season + Moon, data = MentalHealth)
+
+# Print the contingency table
+#print(contingency_table1)
+print(contingency_table)
+
+```
+
+We can procceed with plotting this data (Figure 3):
+
+\newpage
+
+
+```{r fig.cap = "Mental Health Admissions by Season"}
 # grouping by season
 ggplot(MentalHealth, aes(x = Season, y = Admission, fill = Season)) +
   geom_boxplot() +
   theme_minimal()
 ```
-```{r}
-# Sum admissions by Month and Moon Phase
-#contingency_table1 <- xtabs(Admission ~ Month + Moon, data = MentalHealth)
-contingency_table2 <- xtabs(Admission ~ Season + Moon, data = MentalHealth)
 
-# Print the contingency table
-#print(contingency_table1)
-print(contingency_table2)
+The resulting boxplot appears to confirm our previous observation of a seasonal trend. This is especially noticable when observing the difference between the Fall and Spring data.
 
-```
-## Testing the Normality of the Distributions
+The within-group variance appears to be significantly different in the Summer. We will test this further using the levene test before proceeding with a model.
 
-We will start by observing the distribution of the seasons:
-```{r}
+
+We can visually assess egregious departures from normality by observing the distribution of the data on a seasonal basis using histograms (Figure 4):
+
+\newpage
+
+```{r fig.cap = "Distribution of Admissions by Season"}
 # Load necessary library
 #library(ggplot2)
 
@@ -127,63 +140,101 @@ MentalHealth %>% group_by(Season) %>%  summarize("Observation Count" = n())
 ggplot(MentalHealth, aes(x = Admission, fill = Season)) +
   geom_histogram(binwidth = 1, alpha = 0.7) +
   facet_wrap(~ Season) +
-  labs(title = "Distribution of Admissions by Season",
-       x = "Number of Admissions",
+  labs(x = "Number of Admissions",
        y = "Frequency") +
   theme_minimal()
 
 ```
 
-# Model Selection
 
-A chi-squared test would work if the data were normally distributed.
-A two-sample t-test allows for less stringent assumptions of normality.
-A Kruskal-Wallis test...
+The histograms appear to be normal enough for our purposes, it is difficult to detect non-normality given the small sample sizes present in the histograms ($n = 9$ per plot). 
+
+\newpage
+
+# Model Selection and Analysis
+
+## ANOVA
+
+Three main assumptions must be met before proceeding with a one-way ANOVA test:
+  1. Responses for each factor must come from an approximately normal distribution
+  2. Each distribution must have approximately equal variance
+  3. The data must be independent
+
 
 ```{r}
+# checking homogeneity of variance
+leveneTest(Admission ~ Moon * Season, data = MentalHealth)
+```
+The homogeneity assumption of the variance is met through the Levene test.
+
+
+```{r}
+# starting with ANOVA
 anova_model <- aov(Admission ~ Moon * Season, data = MentalHealth)
 summary(anova_model)
-anova_model2 <- aov(Admission ~ Moon + Season, data = MentalHealth)
-summary(anova_model2)
 ```
 According to the ANOVA table, the Season seems to have the greatest effect on admissions.
+
+
+
+Assumptions required for Tukey's Honest Significant Difference Test (Tukey's HSD):
+
+  1. Independent Observations
+  2. Normality
+  3. Homogeneity of Variance (between-group variance approximately equal)
+  4. Random Sampling
+
+The independence of the observations and their random sampling are taken for granted based on the description of the study provided. Someone's admission into a mental hospital should not alter the mental health of the population enough to contradict the assumption of independence. The members of the population that arrive at a mental health facility should be random enough for condition 4 to be met.
 
 ```{r}
 # checking normality of residuals in anova
 shapiro.test(residuals(anova_model))  # Shapiro-Wilk test
-
-# checking homogeneity of variance
-leveneTest(Admission ~ Moon * Season, data = MentalHealth)
 ```
+
 The assumption of the normality of the residuals is met through the Shapiro-Wilk test.
-The homogeneity assumption of the variance is met through the Levene test.
+
 ```{r}
-
+# 
 TukeyHSD(anova_model)
-
-
 ```
+
+None of the interaction terms appeared to have made a significant impact on the admission rates. The only variable pairings that meet a significance threshold of $\alpha \leq 0.05$ are in the `Season` category.
 
 Notable results:
  -Spring-Fall ($p = 0.0065914$)
  -Winter-Spring ($p = 0.0273852$)
 
-
-
+We can supplement this finding by conducting a t-test between the significant variable pairs.
 
 ```{r}
-t.test(Admission ~ Moon, data = subset(MentalHealth, Moon %in% c("Before", "During")), var.equal = TRUE)
-t.test(Admission ~ Season, data = subset(MentalHealth, Season %in% c("Fall", "Spring")), var.equal = TRUE)
+# testing difference in means between two most starkly different variables.
+
+# testing difference between Fall and Spring
+t.test(Admission ~ Season,
+       data = subset(MentalHealth, Season %in% c("Fall", "Spring")),
+       var.equal = TRUE)
+
+# testing difference between Winter and Spring
+t.test(Admission ~ Season,
+       data = subset(MentalHealth,Season %in% c("Winter", "Spring")),
+       var.equal = TRUE)
 
 ```
 
-## Model Assumptions
+The t-tests reinforce what was found in the TukeyHSD.
 
 
 # Conclusion
 
-We found that `season` was the most significant predictor of hospital admissions, with lunar phase failing to meet our significance threshold. More specifically, there seems to be a significant increase in admissions between the Fall and Spring months.
+We found that `season` was the most significant predictor of hospital admissions, with lunar phase failing to meet our significance threshold. More specifically, there seems to be a significant increase in admissions between the Fall and Spring months and between the Winter and Spring months. The overall trend suggests that admissions to mental health facilities tend to fall during the Fall and Winter, while rising dramatically in the Spring.
 
 ## Limitations
 
-The study is limited by the relatively low sample size when considering the segmentation of the data that took place when placing it into a contingency table. A future study may aggregate data from multiple hospital locations, perhaps with varying climates, to see if the association with season and Admissions is spurious and simply a consequence of temperatures restraining activities and thus the potential for injury.
+The study is limited by the relatively low sample size when considering the segmentation of the data that took place when placing it into a contingency table. This makes detecting departures from normality more difficult. A future study may aggregate data from multiple hospital locations, perhaps with varying climates, to see if the association with season and Admissions is spurious and simply a consequence of temperatures restraining activities and thus the potential for mental health breakdowns. Since this dataset comes from a single mental hospital, it may not adequately represent the human population. Culture may also alter perceptions held regarding the full moon and consequently affect the number of mental patients in a given region; this effect may be studied in further detail by replicating this study across disparate cultural regions.
+
+\newpage
+
+# Appendix: All code for this report
+
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
